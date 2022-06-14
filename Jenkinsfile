@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('Clean') {
       when {
-        expression { params.DEBUG_BUILD }
+        expression { params.CLEAN_BEFORE_BUILD }
       }
       steps {
         echo 'Stage clean!'

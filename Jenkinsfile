@@ -11,17 +11,26 @@ pipeline {
         expression { params.CLEAN_BEFORE_BUILD }
       }
       steps {
-        echo 'Stage clean!'
+        sh 'mvn clean'
       }
     }
     stage('Compile') {
       steps {
-        echo 'Stage compile!'
+        sh 'mvn compile'
       }
     }
     stage('Test') {
       steps {
-        echo 'Stage test!'
+        sh 'mvn verify'
+        junit 'target/surefire-reports/*.xml'
+      }
+    }
+    stage('Deploy') {
+      steps {
+        script {
+          def pom = readMavenFile(file: 'pom.xml')
+          sh " ./deploy.sh ${pom.getArtifactId()} ${pom.getVersion()}"
+        }
       }
     }
   }
